@@ -1,0 +1,4 @@
+imageio==2.9.0
+opencv-python==3.4.9.33
+Pillow==5.2.0
+pyzbar==0.1.7
