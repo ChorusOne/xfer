@@ -18,7 +18,7 @@ PAYLOAD_SIZE=537
 ## version
 __MAJOR__ = 0
 __MINOR__ = 0
-__PATCH__ = 1
+__PATCH__ = 2
 __VERSION__ = "{}.{}.{}".format(__MAJOR__, __MINOR__, __PATCH__)
 
 def create_qr(data: bytes,
