@@ -1,6 +1,6 @@
 imageio==2.9.0
-opencv-python==3.4.9.33
-Pillow==5.2.0
-pyzbar==0.1.7
-click==6.7
-qrcode==6.0
+opencv-python==4.5.3.56
+pillow==8.3.2
+pyzbar==0.1.8
+click==8.0.1
+qrcode==7.3
