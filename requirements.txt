@@ -1,5 +1,9 @@
 imageio==2.9.0
-opencv-python==4.5.5.64
+
+# locking up numpy version because of opencv-python dependency
+opencv-python==4.10.0.82
+numpy==1.19.3
+
 pillow==8.3.2
 pyzbar==0.1.8
 click==8.0.1
