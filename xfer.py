@@ -43,7 +43,7 @@ def open_video(idx: int):
     finally:
         vcap.release()
 
-def capture(idx: int = 0, show_frame: bool = False) -> bytes:
+def capture(idx: int = 0, show_frame: bool = True) -> bytes:
     """Capture a QR code from the default video feed."""
     with open_video(idx) as vcap:
         ## set this implausibly high, until we read the keyframe (which may not be the first frame we see).
@@ -99,7 +99,7 @@ def version():
 @click.option('--duration', '-d', is_flag=False, default=200)
 def write(outfile: str, duration: int):
     """
-    Take input from stdin and generate animated GIF QR code. 
+    Take input from stdin and generate animated GIF QR code.
     """
 
     frames = []
@@ -128,11 +128,12 @@ def write(outfile: str, duration: int):
 
 @main.command()
 @click.option('--outfile', '-o', is_flag=False, required=False)
-def read(outfile: str):
+@click.option('--idx', '-i', is_flag=False, type=int, default=0, required=False)
+def read(outfile: str, idx: int):
     """
     Capture QR-code encoded data from webcam. Output defaults to stdout.
     """
-    data = capture()
+    data = capture(idx)
     output = b''
     for idx, val in sorted(data.items()):
       output += bytes.fromhex(val)
