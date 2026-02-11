@@ -10,6 +10,7 @@ import sys
 from math import log2, floor
 import json
 import logging
+import time
 
 ## tweakable params
 CHUNK_SIZE = 256
@@ -48,20 +49,51 @@ def open_video(idx: int):
         vcap.release()
 
 
-def capture(idx: int = 0, show_frame: bool = True) -> bytes:
+def capture(idx: int = 0, show_frame: bool = True) -> dict[int, str]:
     """Capture a QR code from the default video feed."""
     with open_video(idx) as vcap:
+        if not vcap.isOpened():
+            raise click.ClickException(
+                f"Could not open video capture device index {idx}."
+            )
+
+        if not show_frame:
+            click.echo(
+                "Capturing QR frames from camera; press Ctrl-C to abort.", err=True
+            )
+
         ## set this implausibly high, until we read the keyframe (which may not be the first frame we see).
         n_frames = 99999999999999
         frames = {}
+        display_enabled = show_frame
+        max_consecutive_read_failures = 100
+        consecutive_read_failures = 0
         while True:
             ret, frame = vcap.read()
+            if not ret:
+                consecutive_read_failures += 1
+                if consecutive_read_failures >= max_consecutive_read_failures:
+                    raise click.ClickException(
+                        "Camera opened but no frames were received. "
+                        "Try a different --idx value and check camera permissions."
+                    )
+                time.sleep(0.05)
+                continue
+
+            consecutive_read_failures = 0
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             image = Image.fromarray(gray)
 
-            cv2.imshow("Live Capture Feed", gray)
-            if cv2.waitKey(1) == 27:  # esc to quit
-                break
+            if display_enabled:
+                try:
+                    cv2.imshow("Live Capture Feed", gray)
+                    if cv2.waitKey(1) == 27:  # esc to quit
+                        break
+                except cv2.error:
+                    logging.warning(
+                        "OpenCV display backend unavailable; disabling live preview."
+                    )
+                    display_enabled = False
 
             for decoded in pyzbar.decode(image):
                 try:
@@ -149,11 +181,12 @@ def write(outfile: str, duration: int):
 @main.command()
 @click.option("--outfile", "-o", is_flag=False, required=False)
 @click.option("--idx", "-i", is_flag=False, type=int, default=0, required=False)
-def read(outfile: str, idx: int):
+@click.option("--show-frame/--no-show-frame", default=True)
+def read(outfile: str, idx: int, show_frame: bool):
     """
     Capture QR-code encoded data from webcam. Output defaults to stdout.
     """
-    data = capture(idx)
+    data = capture(idx, show_frame=show_frame)
     output = b""
     for idx, val in sorted(data.items()):
         output += bytes.fromhex(val)

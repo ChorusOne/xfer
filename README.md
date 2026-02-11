@@ -5,7 +5,8 @@ Xfer is a utility to allow out-of-band sending of arbitrary data, using animated
 ## Installation
 
 1. Clone the repository
-2. Run `pip install -r requirements.txt` (may be `pip3`, in place of `pip`, depending on your OS).
+2. Install with `pip install .`
+3. Run the CLI with `xfer --help`
 
 ## Workflow
 
@@ -14,7 +15,7 @@ The workflow looks something like this:
 1. Alice runs Xfer on their local machine, as such: `cat 'This is a message to send' | python3 xfer.py write --outfile send.gif`
 2. Alice opens `send.gif` and records the output on a mobile device.
 3. Alice send a message, via a third party service, such as Signal, to Bob.
-4. Bob runs `python3 xfer.py read` on his laptop.
+4. Bob runs `xfer read` on his laptop.
 5. Bob plays the recording of the animated gif, and captures the video on their laptop's webcam.
 6. Once Xfer has captured all the individual frames, it will output the original message on Bob's screen.
 
