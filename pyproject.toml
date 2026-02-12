@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xfer"
+version = "0.0.5"
+description = "Utility to allow out-of-band sending of arbitrary data"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE.md" }
+authors = [{ name = "Chorus One", email = "tech@chorus.one" }]
+classifiers = [
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Natural Language :: English",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Financial and Insurance Industry",
+]
+dependencies = [
+  "click>=8.0",
+  "imageio>=2.9",
+  "numpy>=1.26",
+  "opencv-python>=4.10",
+  "pillow>=10.0",
+  "pyzbar>=0.1.9",
+  "qrcode>=7.4",
+]
+
+[project.urls]
+Homepage = "https://chorus.one"
+
+[project.scripts]
+xfer = "xfer:main"
+
+[dependency-groups]
+dev = []
+
+[tool.setuptools]
+py-modules = ["xfer"]
