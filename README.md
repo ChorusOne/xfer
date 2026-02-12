@@ -8,19 +8,20 @@ Xfer is a utility to allow out-of-band sending of arbitrary data, using animated
 2. Run `pip install -r requirements.txt` (may be `pip3`, in place of `pip`, depending on your OS).
 
 ## Workflow
+
 The workflow looks something like this:
 
 1. Alice runs Xfer on their local machine, as such: `cat 'This is a message to send' | python3 xfer.py write --outfile send.gif`
-2. Alice opens `send.gif` and records the output on a mobile device. 
+2. Alice opens `send.gif` and records the output on a mobile device.
 3. Alice send a message, via a third party service, such as Signal, to Bob.
 4. Bob runs `python3 xfer.py read` on his laptop.
 5. Bob plays the recording of the animated gif, and captures the video on their laptop's webcam.
 6. Once Xfer has captured all the individual frames, it will output the original message on Bob's screen.
- 
+
 ## How it works
 
 1. `xfer write` breaks the source message down into chunks. By default these are 256 byte chunks. This is not supported as a flag, because the relationship between chunk size and QR code dimensions are not clear. The values can be seen at the top of the `xfer` script, but should not be changed unless you know what you are doing!
-2. Each chunk is then encoded to a static QR code, with it's frame number for reassembly. 
+2. Each chunk is then encoded to a static QR code, with it's frame number for reassembly.
 3. A keyframe is added to the start of the sequence, to instruct the receiving application on the number of frames it should expect.
 4. The collection of static images is then compiled into an animated GIF.
 
@@ -31,7 +32,7 @@ The workflow looks something like this:
 ## Limitations
 
 - Xfer was not written to be secure. It can be used as part of a secure workflow, if PGP keys are shared beforehand and the data transmitted is encrypted.
-- Xfer does not compress data; repeated data will be encoded as is. 
+- Xfer does not compress data; repeated data will be encoded as is.
 
 ## Future work
 
