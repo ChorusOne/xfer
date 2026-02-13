@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import click
+import os
 import cv2
 import qrcode
 import pyzbar.pyzbar as pyzbar
@@ -11,6 +12,18 @@ from math import log2, floor
 import json
 import logging
 import time
+
+
+def _configure_qt_env() -> None:
+    fallback_fontdir = os.environ.get("XFER_QT_FONTDIR")
+    if fallback_fontdir:
+        current_fontdir = os.environ.get("QT_QPA_FONTDIR", "")
+        if not current_fontdir or "/cv2/qt/fonts" in current_fontdir:
+            os.environ["QT_QPA_FONTDIR"] = fallback_fontdir
+    os.environ.setdefault("QT_QPA_PLATFORM", "xcb")
+
+
+_configure_qt_env()
 
 ## tweakable params
 CHUNK_SIZE = 256
