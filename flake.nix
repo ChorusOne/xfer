@@ -49,6 +49,11 @@
       let
         pkgs = import nixpkgs { inherit system; };
         python = pkgs.python313;
+        pyzbarOverlay = final: prev: {
+          pyzbar = (final.pkgs.callPackage pyproject-nix.build.hacks { }).nixpkgsPrebuilt {
+            from = python.pkgs.pyzbar;
+          };
+        };
         runtimeLibs = with pkgs; [
           glib
           libGL
@@ -70,6 +75,7 @@
               pkgs.lib.composeManyExtensions [
                 pyproject-build-systems.overlays.wheel
                 projectOverlay
+                pyzbarOverlay
               ]
             );
 
